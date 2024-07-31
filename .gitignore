@@ -1,0 +1,9 @@
+StockCalc/
+.terraform.lock.hcl
+.terraform/
+terraform.tfstate
+terraform.tfstate.backup
+__pycache__/
+terraform.tfvars
+variables.tf
+secret.py
