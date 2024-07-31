@@ -9,7 +9,9 @@ terraform {
 
 # Configure the AWS Provider
 provider "aws" {
-  region = "us-west-1"  # Change this to your desired region
+  access_key = var.aws_access_key
+  secret_key = var.aws_secret_key
+  region     = "us-west-1"  # or any other region you're using
 }
 
 # Create an S3 bucket
