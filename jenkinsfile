@@ -1,5 +1,9 @@
 pipeline {
     agent any
+    
+    triggers{
+        githubPush()
+    }
 
     environment {
         AWS_CREDENTIALS = credentials('aws-credentials-id') 
