@@ -22,13 +22,13 @@ pipeline {
         stage('Terraform Apply') {
             steps {
                 echo 'Running Terraform with AWS credentials...'
+                sh 'terraform init'
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
                     credentialsId: 'aws-credentials-id',  
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
-                    sh 'terraform init'
                     sh 'terraform apply -auto-approve'
                 }
             }
@@ -45,7 +45,7 @@ pipeline {
                     sh """
                     echo "AWS_ACCESS_KEY = '${awsAccessKey}'" > secret.py
                     echo "AWS_SECRET_KEY = '${awsSecretKey}'" >> secret.py
-                    echo "region_name = 'us-west-1' " >>> secret.py
+                    echo "region_name = 'us-west-1' " >> secret.py
                     """
                     
                     // Build your first Docker image
@@ -92,7 +92,8 @@ pipeline {
     post {
         always {
             echo 'Cleaning up...'
-            sh 'docker rm $(docker ps -a -q)' 
+            sh 'docker rm -f $(docker ps -a -q) || true'
+            sh 'docker rmi $(docker images -q) || true'
         }
     }
 }
