@@ -2,4 +2,6 @@ only stage 1- stage('Checkout')- failed
 
 writing jenkins file from scratch- only echo command- succses
 
-adding terraform stage- terraform init
+adding terraform stage- terraform init- succses
+
+adding terraform apply stage- terraform apply-
