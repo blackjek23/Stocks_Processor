@@ -4,4 +4,6 @@ writing jenkins file from scratch- only echo command- succses
 
 adding terraform stage- terraform init- succses
 
-adding terraform apply stage- terraform apply-
+adding terraform apply stage- terraform apply- failed
+
+edit the .tf file to remove usege of local veriables and using env veriables from jenkins Global credentials- 
