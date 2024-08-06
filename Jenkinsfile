@@ -18,7 +18,7 @@ pipeline {
                 echo 'Initializing Terraform'
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-credentials-id',
+                    credentialsId: 'aws-credentials-id',  // Replace with your actual credentials ID
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
@@ -32,7 +32,7 @@ pipeline {
                 echo 'Applying Terraform changes'
                 withCredentials([[
                     $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-credentials-id',
+                    credentialsId: 'aws-credentials-id',  // Replace with your actual credentials ID
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {

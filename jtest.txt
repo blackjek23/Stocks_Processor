@@ -12,4 +12,6 @@ adding env block to jenkinsfile and rework the .tf file- failed
 
 removing env block and using reusing withCredentials block inside init and apply- failed
 
-editing again the .tf file for more specific veriables declarition-
+editing again the .tf file for more specific veriables declarition- failed
+
+start the editing prosses from the 9th line- 
