@@ -8,4 +8,6 @@ adding terraform apply stage- terraform apply- failed
 
 edit the .tf file to remove usege of local veriables and using env veriables from jenkins Global credentials- failed
 
-adding env block to jenkinsfile and rework the .tf file- 
+adding env block to jenkinsfile and rework the .tf file- failed
+
+removing env block and using reusing withCredentials block inside init and apply- 
