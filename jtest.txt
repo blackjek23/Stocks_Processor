@@ -16,4 +16,6 @@ editing again the .tf file for more specific veriables declarition- failed
 
 start the editing prosses from the 9th line- failed
 
-try only using aws credentials to get the s3- 
+try only using aws credentials to get the s3- failed
+
+correcting the aws credentials id-

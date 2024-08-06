@@ -8,7 +8,7 @@ pipeline {
     stages {
         stage('Deploy') {
             steps {
-                withAWS(credentials: 'your-aws-credentials-id', region: "${AWS_REGION}") {
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
                     // Your AWS commands here
                     sh 'aws s3 ls'
                 }
