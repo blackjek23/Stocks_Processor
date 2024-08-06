@@ -3,6 +3,8 @@ pipeline {
 
     environment {
         AWS_CREDENTIALS = credentials('aws-credentials-id')  // Replace with your actual credentials ID
+        TF_VAR_aws_access_key = credentials('aws-credentials-id').accessKey
+        TF_VAR_aws_secret_key = credentials('aws-credentials-id').secretKey
     }
 
     stages {
@@ -16,28 +18,14 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 echo 'Initializing Terraform'
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-credentials-id',  // Replace with your actual credentials ID
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                ]]) {
-                    sh 'terraform init'
-                }
+                sh 'terraform init'
             }
         }
 
         stage('Terraform Apply') {
             steps {
                 echo 'Applying Terraform changes'
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-credentials-id',  // Replace with your actual credentials ID
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                ]]) {
-                    sh 'terraform apply -auto-approve'
-                }
+                sh 'terraform apply -auto-approve'
             }
         }
     }
