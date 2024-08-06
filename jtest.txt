@@ -14,4 +14,6 @@ removing env block and using reusing withCredentials block inside init and apply
 
 editing again the .tf file for more specific veriables declarition- failed
 
-start the editing prosses from the 9th line- 
+start the editing prosses from the 9th line- failed
+
+try only using aws credentials to get the s3- 
