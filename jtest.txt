@@ -18,4 +18,6 @@ start the editing prosses from the 9th line- failed
 
 try only using aws credentials to get the s3- failed
 
-correcting the aws credentials id-
+correcting the aws credentials id- succses
+
+return to the jenkins form 17th line
