@@ -22,11 +22,7 @@ pipeline {
                     accessKeyVariable: 'AWS_ACCESS_KEY_ID',
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
-                    sh '''
-                        export TF_VAR_aws_access_key=$AWS_ACCESS_KEY_ID
-                        export TF_VAR_aws_secret_key=$AWS_SECRET_ACCESS_KEY
-                        terraform init
-                    '''
+                    sh 'terraform init'
                 }
             }
         }
@@ -41,9 +37,9 @@ pipeline {
                     secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
                 ]]) {
                     sh '''
-                        export TF_VAR_aws_access_key=$AWS_ACCESS_KEY_ID
-                        export TF_VAR_aws_secret_key=$AWS_SECRET_ACCESS_KEY
-                        terraform apply -auto-approve
+                    terraform apply -auto-approve \
+                    -var="aws_access_key=$AWS_ACCESS_KEY_ID" \
+                    -var="aws_secret_key=$AWS_SECRET_ACCESS_KEY"
                     '''
                 }
             }

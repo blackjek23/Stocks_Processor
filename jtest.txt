@@ -10,4 +10,6 @@ edit the .tf file to remove usege of local veriables and using env veriables fro
 
 adding env block to jenkinsfile and rework the .tf file- failed
 
-removing env block and using reusing withCredentials block inside init and apply- 
+removing env block and using reusing withCredentials block inside init and apply- failed
+
+editing again the .tf file for more specific veriables declarition-
