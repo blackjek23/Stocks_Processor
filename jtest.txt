@@ -28,4 +28,5 @@ correrting syntax from lien 29-failed
 
 edit .tf file to work with env veriables- succses
 
-adding s3 delete-
+adding s3 delete- succses
+
