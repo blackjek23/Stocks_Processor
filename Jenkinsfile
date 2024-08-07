@@ -16,9 +16,7 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 echo 'Initializing Terraform'
-                {
-                    sh 'terraform init'
-                }
+                sh 'terraform init'
             }
         }
 
@@ -26,21 +24,9 @@ pipeline {
             steps {
                 echo 'Applying Terraform changes'
                 withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
-                }
-                {
-                    sh '''
-                    terraform apply -auto-approve
-                    '''
-                }
-            }
-        }
-
-        stages {
-        stage('Deploy') {
-            
+                    sh 'terraform apply -auto-approve'
                 }
             }
         }
     }
-
-    
+}
