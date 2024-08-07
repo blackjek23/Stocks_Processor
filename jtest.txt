@@ -32,4 +32,6 @@ adding s3 delete- succses
 
 adding docker build- succses
 
-adding docker run-
+adding docker run-failed
+
+correcting containers veriable names- 

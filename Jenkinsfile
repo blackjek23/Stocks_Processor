@@ -38,8 +38,9 @@ pipeline {
                     script {
                         def secretFile = 'secret.py'
                         writeFile file: secretFile, text: """
-AWS_ACCESS_KEY_ID = '${AWS_ACCESS_KEY_ID}'
-AWS_SECRET_ACCESS_KEY = '${AWS_SECRET_ACCESS_KEY}'
+Access_key = '${AWS_ACCESS_KEY_ID}'
+Secret_access_key = '${AWS_SECRET_ACCESS_KEY}'
+region_name = '${AWS_REGION}
 """
                         sh 'docker build -t container1 .'
                     }
@@ -53,8 +54,9 @@ AWS_SECRET_ACCESS_KEY = '${AWS_SECRET_ACCESS_KEY}'
                     script {
                         def secretFile = 'secret.py'
                         writeFile file: secretFile, text: """
-AWS_ACCESS_KEY_ID = '${AWS_ACCESS_KEY_ID}'
-AWS_SECRET_ACCESS_KEY = '${AWS_SECRET_ACCESS_KEY}'
+Access_key = '${AWS_ACCESS_KEY_ID}'
+Secret_access_key = '${AWS_SECRET_ACCESS_KEY}'
+region_name = '${AWS_REGION}
 """
                         sh 'docker build -t container2 .'
                     }
