@@ -24,4 +24,6 @@ return to the jenkins form 17th line- failed
 
 using WITHaws method- syntax error
 
-correrting syntax from lien 29
+correrting syntax from lien 29-failed
+
+edit .tf file to work with env veriables- 

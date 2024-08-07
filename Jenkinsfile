@@ -3,6 +3,7 @@ pipeline {
 
     environment {
         AWS_REGION = 'us-west-1'
+        TF_IN_AUTOMATION = 'true'
     }
 
     stages {
@@ -15,14 +16,14 @@ pipeline {
         
         stage('Terraform Init') {
             steps {
-                echo 'Initializing Terraform'
-                sh 'terraform init'
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                    sh 'terraform init'
+                }
             }
         }
 
         stage('Terraform Apply') {
             steps {
-                echo 'Applying Terraform changes'
                 withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
                     sh 'terraform apply -auto-approve'
                 }
