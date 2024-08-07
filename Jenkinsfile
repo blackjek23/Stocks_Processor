@@ -61,5 +61,21 @@ AWS_SECRET_ACCESS_KEY = '${AWS_SECRET_ACCESS_KEY}'
                 }
             }
         }
+
+        stage('Run Container 1') {
+            steps {
+                script {
+                    sh 'docker run --rm container1'
+                }
+            }
+        }
+
+        stage('Run Container 2') {
+            steps {
+                script {
+                    sh 'docker run --rm container2'
+                }
+            }
+        }
     }
 }

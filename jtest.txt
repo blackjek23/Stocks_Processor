@@ -30,3 +30,6 @@ edit .tf file to work with env veriables- succses
 
 adding s3 delete- succses
 
+adding docker build- succses
+
+adding docker run-
