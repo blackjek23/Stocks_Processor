@@ -56,7 +56,7 @@ region_name = '${AWS_REGION}
                         writeFile file: secretFile, text: """
 Access_key = '${AWS_ACCESS_KEY_ID}'
 Secret_access_key = '${AWS_SECRET_ACCESS_KEY}'
-region_name = '${AWS_REGION}'
+region_name = 'us-east-1'
 """
                         sh 'docker build -t container2 .'
                     }
