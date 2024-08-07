@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        AWS_CREDENTIALS = credentials('aws-credentials-id')  // Replace with your actual credentials ID
+        AWS_REGION = 'us-west-1'
     }
 
     stages {
@@ -16,12 +16,7 @@ pipeline {
         stage('Terraform Init') {
             steps {
                 echo 'Initializing Terraform'
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-credentials-id',  // Replace with your actual credentials ID
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                ]]) {
+                {
                     sh 'terraform init'
                 }
             }
