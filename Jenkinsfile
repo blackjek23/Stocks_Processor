@@ -32,15 +32,13 @@ pipeline {
             }
         }
 
-        stage('Save AWS Credentials') {
+         stage('Save AWS Credentials') {
             steps {
-                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                credentials('aws-credentials-id') {
                     sh """
-                        echo "Access_key=$AWS_ACCESS_KEY_ID" > ${AWS_CRED_FILE}
-                        echo "Secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ${AWS_CRED_FILE}
-                        echo "region_name=${AWS_REGION} >> ${AWS_CRED_FILE}
-                    """
-                }
+                        echo "AWS_ACCESS_KEY_ID=$AWS_ACCESS_KEY_ID" > ${AWS_CRED_FILE}
+                        echo "AWS_SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> ${AWS_CRED_FILE}
+                    """                }
             }
         }
 
