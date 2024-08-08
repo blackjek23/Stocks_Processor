@@ -5,6 +5,7 @@ pipeline {
     environment {
         AWS_REGION = 'us-west-1'
         TF_IN_AUTOMATION = 'true'
+        AWS_CRED_FILE = 'secret.py'
     }
 
     stages {
@@ -31,11 +32,29 @@ pipeline {
             }
         }
 
+        stage('Save AWS Credentials') {
+            steps {
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                    sh """
+                        echo "Access_key=$AWS_ACCESS_KEY_ID" > ${AWS_CRED_FILE}
+                        echo "Secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ${AWS_CRED_FILE}
+                        echo "region_name=${AWS_REGION}
+                    """
+                }
+            }
+        }
+
         stage('terraform destroy') {
             steps {
                 withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
                     sh 'terraform destroy -auto-approve'
                 }
+            }
+        }
+
+        stage('Verify AWS Credentials File') {
+            steps {
+                sh "cat ${AWS_CRED_FILE}"
             }
         }
     }

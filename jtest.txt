@@ -34,4 +34,6 @@ adding docker build- succses
 
 adding docker run-failed
 
-correcting containers veriable names- 
+correcting containers veriable names- failed
+
+try to create secret.py file- 
