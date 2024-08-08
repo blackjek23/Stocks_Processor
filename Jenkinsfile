@@ -32,51 +32,9 @@ pipeline {
             }
         }
 
-        stage('Build Container 1') {
+        stage('Fetch Repository') {
             steps {
-                dir('downloader') {
-                    script {
-                        def secretFile = 'secret.py'
-                        writeFile file: secretFile, text: """
-Access_key = '${AWS_ACCESS_KEY_ID}'
-Secret_access_key = '${AWS_SECRET_ACCESS_KEY}'
-region_name = '${AWS_REGION}
-"""
-                        sh 'docker build -t container1 .'
-                    }
-                }
-            }
-        }
-
-        stage('Build Container 2') {
-            steps {
-                dir('shreder') {
-                    script {
-                        def secretFile = 'secret.py'
-                        writeFile file: secretFile, text: """
-Access_key = '${AWS_ACCESS_KEY_ID}'
-Secret_access_key = '${AWS_SECRET_ACCESS_KEY}'
-region_name = 'us-east-1'
-"""
-                        sh 'docker build -t container2 .'
-                    }
-                }
-            }
-        }
-
-        stage('Run Container 1') {
-            steps {
-                script {
-                    sh 'docker run --rm container1'
-                }
-            }
-        }
-
-        stage('Run Container 2') {
-            steps {
-                script {
-                    sh 'docker run --rm container2'
-                }
+                echo AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
             }
         }
     }
