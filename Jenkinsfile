@@ -1,11 +1,10 @@
 pipeline {
+
     agent any
 
     environment {
         AWS_REGION = 'us-west-1'
         TF_IN_AUTOMATION = 'true'
-        AWS_ACCESS_KEY_ID = credentials('aws-credentials-id')
-        AWS_SECRET_ACCESS_KEY = credentials('aws-credentials-id')
     }
 
     stages {
@@ -15,7 +14,7 @@ pipeline {
                 git url: 'https://github.com/blackjek23/Stocks_Processor.git'
             }
         }
-        
+
         stage('Terraform Init') {
             steps {
                 withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
@@ -32,9 +31,11 @@ pipeline {
             }
         }
 
-        stage('Fetch Repository') {
+        stage('terraform destroy') {
             steps {
-                echo AWS_ACCESS_KEY_ID, AWS_SECRET_ACCESS_KEY
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                    sh 'terraform destroy -auto-approve'
+                }
             }
         }
     }
