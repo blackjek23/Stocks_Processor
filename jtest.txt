@@ -36,4 +36,6 @@ adding docker run-failed
 
 correcting containers veriable names- failed
 
-try to create secret.py file- 
+try to create secret.py file- failed
+
+updating syntax -

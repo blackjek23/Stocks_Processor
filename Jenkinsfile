@@ -38,7 +38,7 @@ pipeline {
                     sh """
                         echo "Access_key=$AWS_ACCESS_KEY_ID" > ${AWS_CRED_FILE}
                         echo "Secret_access_key=$AWS_SECRET_ACCESS_KEY" >> ${AWS_CRED_FILE}
-                        echo "region_name=${AWS_REGION}
+                        echo "region_name=${AWS_REGION} >> ${AWS_CRED_FILE}
                     """
                 }
             }
