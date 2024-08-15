@@ -3,7 +3,9 @@ import pandas as pd
 from datetime import date, timedelta
 from io import BytesIO
 import boto3
-from secret import Access_key, Secret_access_key, region_name
+from secret import Access_key, Secret_access_key
+
+region_name= 'us-west-1'
 
 def download_stocks_data():
     # Create a single boto3 session with the credentials
