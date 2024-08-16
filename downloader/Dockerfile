@@ -12,6 +12,7 @@ RUN pip install  -r requirements.txt
 
 # Copy the rest of your application's code into the container
 COPY . .
+COPY ../secret.py .
 
 # Specify the command to run your application
 CMD ["python", "download-data.py"]
