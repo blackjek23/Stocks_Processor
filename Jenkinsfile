@@ -15,13 +15,34 @@ pipeline {
 
 
     stages {
-        stage('Checkout') {
-            steps {
+        // BUILD STARTS HERE !!!
+        stage{
+            steps 0 {
+                // Checkout
                 echo 'Pulling the repo from GitHub...'
                 git 'https://github.com/blackjek23/Stocks_Processor.git' 
-            }
+
+                // Credentials
+               withAWS(credentials: 'aws-credentials-id') {
+                   sh """
+                        echo "Access_key= '${AWS_ACCESS_KEY_ID}'" > ${AWS_CRED_FILE}
+                        echo "Secret_access_key= '${AWS_SECRET_ACCESS_KEY}'" >> ${AWS_CRED_FILE}
+                    """
+                    sh "cat ${AWS_CRED_FILE}"
+                }
+                // Build your first Docker image
+                sh "cp ./secret.py ./downloader"
+                sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
+                
+                // Build your second Docker image
+                sh "mv ./secret.py ./shreder"
+                sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
+  
+             }
         }
 
+
+        // DEPLOY STARTS HERE !!!
         stage('Terraform Init') {
             steps {
                 withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
@@ -38,29 +59,6 @@ pipeline {
             }
         }
 
-        stage('Save AWS Credentials') {
-            steps {
-        withAWS(credentials: 'aws-credentials-id') {
-                   sh """
-                        echo "Access_key= '${AWS_ACCESS_KEY_ID}'" > ${AWS_CRED_FILE}
-                        echo "Secret_access_key= '${AWS_SECRET_ACCESS_KEY}'" >> ${AWS_CRED_FILE}
-                    """
-                    sh "cat ${AWS_CRED_FILE}"
-                }
-            }
-        }
-
-        stage('Build Containers') {
-            steps {
-                    // Build your first Docker image
-                    sh "cp ./secret.py ./downloader"
-                    sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
-                    
-                    // Build your second Docker image
-                    sh "mv ./secret.py ./shreder"
-                    sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
-                }
-            }
 
         stage('Run Downloader Container') {
             steps {
