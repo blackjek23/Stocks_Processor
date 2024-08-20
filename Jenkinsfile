@@ -86,7 +86,9 @@ pipeline {
                 echo 'Uploading images and cleaning up...'
                 sh "docker push ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
                 sh "docker push ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
-                sh "docker rmi $(docker images -q) || true"
+                sh '''
+                docker rmi $(docker images -q) || true
+                '''
             }
         }
     }
