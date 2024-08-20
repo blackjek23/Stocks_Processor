@@ -54,9 +54,11 @@ pipeline {
             steps {
                 
                     // Build your first Docker image
+                    sh "cp ./secret.py ./downloader"
                     sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
                     
                     // Build your second Docker image
+                    sh "mv ./secret.py ./shreder"
                     sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
                     
                     // Remove the temporary secret.py file
