@@ -52,7 +52,6 @@ pipeline {
 
         stage('Build Containers') {
             steps {
-                
                     // Build your first Docker image
                     sh "cp ./secret.py ./downloader"
                     sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
@@ -60,9 +59,6 @@ pipeline {
                     // Build your second Docker image
                     sh "mv ./secret.py ./shreder"
                     sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
-                    
-                    // Remove the temporary secret.py file
-                    // sh "rm ${AWS_CRED_FILE}"
                 }
             }
 
@@ -84,6 +80,15 @@ pipeline {
                 withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
                     sh 'terraform destroy -auto-approve'
                 }
+            }
+        }
+
+        stage('cleaning up') {
+            steps {
+                echo 'Uploading images and cleaning up...'
+                sh "docker push ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
+                sh "docker push ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
+                sh "docker rmi $(docker images -q) || true"
             }
         }
     }
