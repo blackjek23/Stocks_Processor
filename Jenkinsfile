@@ -62,7 +62,7 @@ pipeline {
                     sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
                     
                     // Remove the temporary secret.py file
-                    sh "rm ${AWS_CRED_FILE}"
+                    // sh "rm ${AWS_CRED_FILE}"
                 }
             }
 
