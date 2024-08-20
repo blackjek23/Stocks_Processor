@@ -6,10 +6,13 @@ pipeline {
     }
 
     environment {
-        AWS_CREDENTIALS = credentials('aws-credentials-id') 
+        AWS_REGION = 'us-west-1'
+        TF_IN_AUTOMATION = 'true'
+        AWS_CRED_FILE = 'secret.py'
         DOCKER_IMAGE_NAME_1 = 'blackjek23/downloader'
         DOCKER_IMAGE_NAME_2 = 'blackjek23/shreder'
     }
+
 
     stages {
         stage('Checkout') {
@@ -19,35 +22,37 @@ pipeline {
             }
         }
 
+        stage('Terraform Init') {
+            steps {
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                    sh 'terraform init'
+                }
+            }
+        }
+
         stage('Terraform Apply') {
             steps {
-                echo 'Running Terraform with AWS credentials...'
-                sh 'terraform init'
-                withCredentials([[
-                    $class: 'AmazonWebServicesCredentialsBinding',
-                    credentialsId: 'aws-credentials-id',  
-                    accessKeyVariable: 'AWS_ACCESS_KEY_ID',
-                    secretKeyVariable: 'AWS_SECRET_ACCESS_KEY'
-                ]]) {
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
                     sh 'terraform apply -auto-approve'
+                }
+            }
+        }
+
+        stage('Save AWS Credentials') {
+            steps {
+        withAWS(credentials: 'aws-credentials-id') {
+                   sh """
+                        echo "Access_key= '${AWS_ACCESS_KEY_ID}'" > ${AWS_CRED_FILE}
+                        echo "Secret_access_key= '${AWS_SECRET_ACCESS_KEY}'" >> ${AWS_CRED_FILE}
+                    """
+                    sh "cat ${AWS_CRED_FILE}"
                 }
             }
         }
 
         stage('Build Containers') {
             steps {
-                echo 'Building containers with AWS credentials...'
-                script {
-                    def awsAccessKey = env.AWS_ACCESS_KEY_ID
-                    def awsSecretKey = env.AWS_SECRET_ACCESS_KEY
-                    
-                    // Create a temporary secret.py file with AWS credentials
-                    sh """
-                    echo "AWS_ACCESS_KEY = '${awsAccessKey}'" > secret.py
-                    echo "AWS_SECRET_KEY = '${awsSecretKey}'" >> secret.py
-                    echo "region_name = 'us-west-1' " >> secret.py
-                    """
-                    
+                
                     // Build your first Docker image
                     sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
                     
@@ -55,45 +60,29 @@ pipeline {
                     sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
                     
                     // Remove the temporary secret.py file
-                    sh 'rm secret.py'
+                    sh "rm ${AWS_CRED_FILE}"
+                }
+            }
+
+        stage('Run Downloader Container') {
+            steps {
+                sh "docker run --rm ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
+            }
+        }
+
+        stage('Run Shreder Container') {
+            steps {
+                sh "docker run --rm ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
+            }
+        }
+
+
+        stage('terraform destroy') {
+            steps {
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                    sh 'terraform destroy -auto-approve'
                 }
             }
         }
-
-        stage('Run First Container') {
-            steps {
-                echo 'Running the first container...'
-                script {
-                    def containerId = sh(script: "docker run -d ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}", returnStdout: true).trim()
-                    echo "First container ID: ${containerId}"
-
-                    // Wait for the container to finish
-                    sh "docker wait ${containerId}"
-                    
-                    // Check the exit code
-                    def exitCode = sh(script: "docker inspect ${containerId} --format='{{.State.ExitCode}}'", returnStdout: true).trim()
-                    echo "First container exited with code: ${exitCode}"
-
-                    if (exitCode != "0") {
-                        error "First container failed with exit code ${exitCode}"
-                    }
-                }
-            }
-        }
-
-        stage('Run Second Container') {
-            steps {
-                echo 'Running the second container...'
-                sh "docker run -d ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
-            }
-        }
     }
-
-    post {
-        always {
-            echo 'Cleaning up...'
-            sh 'docker rm -f $(docker ps -a -q) || true'
-            sh 'docker rmi $(docker images -q) || true'
-        }
-    }
-}
+} 
