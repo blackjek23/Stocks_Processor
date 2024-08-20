@@ -16,8 +16,8 @@ pipeline {
 
     stages {
         // BUILD STARTS HERE !!!
-        stage{
-            steps 0 {
+        stage('build stage') {
+            steps {
                 // Checkout
                 echo 'Pulling the repo from GitHub...'
                 git 'https://github.com/blackjek23/Stocks_Processor.git' 
