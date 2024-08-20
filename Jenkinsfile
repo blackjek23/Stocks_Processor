@@ -23,7 +23,7 @@ pipeline {
                 git 'https://github.com/blackjek23/Stocks_Processor.git' 
 
                 // Credentials
-               withAWS(credentials: 'aws-credentials-id') {
+                withAWS(credentials: 'aws-credentials-id') {
                    sh """
                         echo "Access_key= '${AWS_ACCESS_KEY_ID}'" > ${AWS_CRED_FILE}
                         echo "Secret_access_key= '${AWS_SECRET_ACCESS_KEY}'" >> ${AWS_CRED_FILE}
@@ -38,7 +38,7 @@ pipeline {
                 sh "mv ./secret.py ./shreder"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
   
-             }
+            }
         }
 
 
