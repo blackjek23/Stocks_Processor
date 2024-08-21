@@ -19,13 +19,13 @@ def download_stocks_data():
     s3_client = session.client('s3')
 
     end_date = date.today()
-    start_date = end_date - timedelta(days=365)
+    start_date = end_date - timedelta(days=100)
     bucket_name = 'blackjek-bucket-unique'
 
     with open('stocks.txt', 'r') as f:
         for ticker in f:
             Symbol = ticker.strip()
-            df = yf.download(Symbol, start=start_date, end=end_date, interval="1d")
+            df = yf.download(Symbol, start=start_date, end=end_date, interval="1h")
             csv_buffer = BytesIO()
             df.to_csv(csv_buffer, index=False)
             csv_buffer.seek(0)
