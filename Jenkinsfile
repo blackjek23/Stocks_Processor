@@ -30,6 +30,7 @@ pipeline {
                     """
                     sh "cat ${AWS_CRED_FILE}"
                 }
+
                 // Build your first Docker image
                 sh "cp ./secret.py ./downloader"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
@@ -43,53 +44,46 @@ pipeline {
 
 
         // DEPLOY STARTS HERE !!!
-        stage('Terraform Init') {
+        stage('deploy stage') {
+            when {
+                branch 'master'
+            }
+            // terraform init
             steps {
                 withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
                     sh 'terraform init'
                 }
-            }
-        }
 
-        stage('Terraform Apply') {
-            steps {
+            // terraform apply
                 withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
                     sh 'terraform apply -auto-approve'
                 }
-            }
-        }
 
-
-        stage('Run Downloader Container') {
-            steps {
+            // docker run 
                 sh "docker run --rm ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
-            }
-        }
-
-        stage('Run Shreder Container') {
-            steps {
                 sh "docker run --rm ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
             }
         }
 
-
-        stage('terraform destroy') {
-            steps {
-                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
-                    sh 'terraform destroy -auto-approve'
-                }
+        stage('cleaning stage') {
+            when {
+                branch 'master'
             }
-        }
-
-        stage('cleaning up') {
             steps {
+                // docker push to my dockerhub repo
                 echo 'Uploading images and cleaning up...'
                 sh "docker push ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
                 sh "docker push ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
                 sh '''
                 docker rmi $(docker images -q) || true
                 '''
+            
+            // terraform destroy
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                    sh 'terraform destroy -auto-approve'
+                }
             }
+
         }
     }
 } 
