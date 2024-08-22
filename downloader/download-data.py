@@ -25,9 +25,9 @@ def download_stocks_data():
     with open('stocks.txt', 'r') as f:
         for ticker in f:
             Symbol = ticker.strip()
-            df = yf.download(Symbol, start=start_date, end=end_date, interval="1h")
+            df = yf.download(Symbol, start=start_date, end=end_date, interval="1d")
             csv_buffer = BytesIO()
-            df.to_csv(csv_buffer, index=False)
+            df.to_csv(csv_buffer, index=True)
             csv_buffer.seek(0)
 
             # Upload to S3
