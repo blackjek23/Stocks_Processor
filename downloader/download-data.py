@@ -19,7 +19,7 @@ def download_stocks_data():
     s3_client = session.client('s3')
 
     end_date = date.today()
-    start_date = end_date - timedelta(days=100)
+    start_date = end_date - timedelta(days=365)
     bucket_name = 'blackjek-bucket-unique'
 
     with open('stocks.txt', 'r') as f:
