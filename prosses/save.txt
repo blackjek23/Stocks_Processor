@@ -1,0 +1,7 @@
+session = boto3.Session(
+        aws_access_key_id=Access_key,
+        aws_secret_access_key=Secret_access_key,
+        region_name=region_name
+    )
+
+blackjek-bucket-unique
