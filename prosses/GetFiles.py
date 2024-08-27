@@ -3,6 +3,7 @@ import boto3
 import pandas as pd
 from io import StringIO
 from Calc import process_data
+from TryAlert import detect_ema_cross
 
 region_name= 'us-west-1'
 
@@ -31,7 +32,7 @@ def read_s3_csv_files(bucket_name):
                     
                     # Read the CSV file into a pandas DataFrame
                     stock_data = pd.read_csv(StringIO(file_content), parse_dates=['Date'], index_col='Date')
-                    process_data(stock_data)
+                    detect_ema_cross(stock_data)
                     print(file_key)
         else:
             print(f"No contents found in the bucket {bucket_name}.")
