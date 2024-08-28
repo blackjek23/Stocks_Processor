@@ -2,7 +2,6 @@ from secret import Access_key, Secret_access_key
 import boto3
 import pandas as pd
 from io import StringIO
-from Calc import process_data
 from TryAlert import detect_ema_cross
 
 region_name= 'us-west-1'
