@@ -30,15 +30,6 @@ pipeline {
                     """
                     sh "cat ${AWS_CRED_FILE}"
                 }
-
-                // Build your first Docker image
-                sh "cp ./secret.py ./downloader"
-                sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
-                
-                // Build your second Docker image
-                sh "mv ./secret.py ./shreder"
-                sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
-  
             }
         }
 
@@ -59,6 +50,15 @@ pipeline {
                 //     sh 'terraform apply -auto-approve'
                 // }
 
+
+                // Build your first Docker image
+                sh "cp ./secret.py ./downloader"
+                sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
+                
+                // Build your second Docker image
+                sh "mv ./secret.py ./shreder"
+                sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
+  
             // docker run 
                 sh "docker run --rm ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
                 sh "docker run --rm ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
@@ -86,4 +86,4 @@ pipeline {
 
         }
     }
-} 
+}
