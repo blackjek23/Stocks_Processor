@@ -55,9 +55,9 @@ pipeline {
                 }
 
             // terraform apply
-                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
-                    sh 'terraform apply -auto-approve'
-                }
+                // withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                //     sh 'terraform apply -auto-approve'
+                // }
 
             // docker run 
                 sh "docker run --rm ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
@@ -79,8 +79,8 @@ pipeline {
                 '''
             
             // terraform destroy
-                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
-                    sh 'terraform destroy -auto-approve'
+                // withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                //     sh 'terraform destroy -auto-approve'
                 }
             }
 
