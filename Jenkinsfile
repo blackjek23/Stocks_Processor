@@ -81,7 +81,7 @@ pipeline {
             // terraform destroy
                 // withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
                 //     sh 'terraform destroy -auto-approve'
-                }
+                // }
             }
 
         }
