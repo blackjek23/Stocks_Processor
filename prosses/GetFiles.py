@@ -20,19 +20,28 @@ def read_s3_csv_files(bucket_name):
         response = s3.list_objects_v2(Bucket=bucket_name)
         
         if 'Contents' in response:
-            for obj in response['Contents']:
-                file_key = obj['Key']
-                
-                # Assuming all files are CSV
-                if file_key.endswith('.csv'):
-                    # Fetch the file from S3
-                    file_obj = s3.get_object(Bucket=bucket_name, Key=file_key)
-                    file_content = file_obj['Body'].read().decode('utf-8')
+            # open the output file
+            with open('alerts.txt', 'w') as output_file:
+                for obj in response['Contents']:
+                    file_key = obj['Key']
                     
-                    # Read the CSV file into a pandas DataFrame
-                    stock_data = pd.read_csv(StringIO(file_content), parse_dates=['Date'], index_col='Date')
-                    print(file_key)
-                    detect_ema_cross(stock_data)
+                    # Assuming all files are CSV
+                    if file_key.endswith('.csv'):
+                        # Fetch the file from S3
+                        file_obj = s3.get_object(Bucket=bucket_name, Key=file_key)
+                        file_content = file_obj['Body'].read().decode('utf-8')
+                        
+                            # Read the CSV file into a pandas DataFrame
+                        stock_data = pd.read_csv(StringIO(file_content), parse_dates=['Date'], index_col='Date')
+                            
+                        last_cross_row = detect_ema_cross(stock_data, output_file)
+            
+                        if last_cross_row is not None:
+                            # Write the ticker name and the last row to the alerts file
+                            output_file.write(f"Ticker: {file_key}\n")
+                            output_file.write(f"Date: {last_cross_row.name}\n")
+                            output_file.write(f"{last_cross_row.to_string()}\n")
+                            output_file.write("\n")  # Add a newline for separation between entries
         else:
             print(f"No contents found in the bucket {bucket_name}.")
     except Exception as e:

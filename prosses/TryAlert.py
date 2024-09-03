@@ -1,6 +1,6 @@
 import pandas as pd
 
-def detect_ema_cross(df):
+def detect_ema_cross(df, output_file):
     # Calculate the 150 EMA (if not already in the CSV)
     df['150_EMA'] = df['Close'].ewm(span=150, adjust=False).mean()
 
@@ -10,7 +10,7 @@ def detect_ema_cross(df):
 
     # Send Alerts
     if df['Cross_Up'].iloc[-1]:
-        print(df.iloc[-1])
+        return (df.iloc[-1])
 
     if df['Cross_Down'].iloc[-1]:
-        print(df.iloc[-1])
+        return (df.iloc[-1])

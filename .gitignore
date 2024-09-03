@@ -9,3 +9,4 @@ variables.tf
 secret.py
 webhook.txt
 algo/
+alerts.txt
