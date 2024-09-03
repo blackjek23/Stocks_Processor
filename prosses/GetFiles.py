@@ -31,8 +31,8 @@ def read_s3_csv_files(bucket_name):
                     
                     # Read the CSV file into a pandas DataFrame
                     stock_data = pd.read_csv(StringIO(file_content), parse_dates=['Date'], index_col='Date')
-                    detect_ema_cross(stock_data)
                     print(file_key)
+                    detect_ema_cross(stock_data)
         else:
             print(f"No contents found in the bucket {bucket_name}.")
     except Exception as e:
