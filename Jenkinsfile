@@ -28,7 +28,7 @@ pipeline {
                         echo "Access_key= '${AWS_ACCESS_KEY_ID}'" > ${AWS_CRED_FILE}
                         echo "Secret_access_key= '${AWS_SECRET_ACCESS_KEY}'" >> ${AWS_CRED_FILE}
                     """
-                    sh "cat ${AWS_CRED_FILE}"
+                    sh "cat ${AWS_CRED_FILE}"    
                 }
             }
         }
@@ -45,17 +45,23 @@ pipeline {
                     sh 'terraform init'
                 }
 
-            // terraform apply
-                // withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
-                //     sh 'terraform apply -auto-approve'
-                // }
+            // terraform destroy - delete the old s3 for clean space 
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                    sh 'terraform destroy -auto-approve'
 
+            
+                }
 
-                // Build your first Docker image
+            // terraform apply - create new s3 for clean space
+                withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
+                    sh 'terraform apply -auto-approve'
+                }
+
+            // Build your first Docker image
                 sh "cp ./secret.py ./downloader"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
                 
-                // Build your second Docker image
+            // Build your second Docker image
                 sh "mv ./secret.py ./shreder"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
   
@@ -77,13 +83,7 @@ pipeline {
                 sh '''
                 docker rmi $(docker images -q) || true
                 '''
-            
-            // terraform destroy
-                // withAWS(credentials: 'aws-credentials-id', region: "${AWS_REGION}") {
-                //     sh 'terraform destroy -auto-approve'
-                // }
             }
-
         }
     }
 }
