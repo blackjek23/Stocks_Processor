@@ -26,7 +26,3 @@ This project is a Python-based system that monitors stock price movements in rel
 ## CI/CD Pipeline
 
 The project includes a Jenkins pipeline (`Jenkinsfile`) for automating the integration and deployment process. Configure Jenkins to use the pipeline for continuous integration and delivery.
-
----
-
-Let me know if you'd like any further adjustments!
