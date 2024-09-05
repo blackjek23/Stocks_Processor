@@ -7,7 +7,7 @@ This project is a Python-based system that monitors stock price movements in rel
 - **Stock Monitoring**: Detects when stock prices cross the 150 EMA.
 - **Alert Logging**: Alerts for cross-ups and cross-downs are logged in `alerts.txt`.
 - **Docker Support**: The application can be easily deployed using Docker.
-- **Flask Web Interface**: Displays alerts in a web page.
+- **Flask Web Interface**: Displays alerts in a web page. (pending)
 
 ## Project Structure
 
