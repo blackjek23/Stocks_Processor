@@ -8,5 +8,5 @@ terraform.tfvars
 variables.tf
 secret.py
 webhook.txt
-/algo
+algo/
 alerts.txt
