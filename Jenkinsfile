@@ -11,7 +11,7 @@ pipeline {
         AWS_CRED_FILE = 'secret.py'
         DOCKER_IMAGE_NAME_1 = 'blackjek23/downloader'
         DOCKER_IMAGE_NAME_2 = 'blackjek23/shreder'
-        DOCKER_IMAGE_NAME_3 = 'blackjek23/EMA'
+        DOCKER_IMAGE_NAME_3 = 'blackjek23/ema'
     }
 
 
