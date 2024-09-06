@@ -11,6 +11,7 @@ pipeline {
         AWS_CRED_FILE = 'secret.py'
         DOCKER_IMAGE_NAME_1 = 'blackjek23/downloader'
         DOCKER_IMAGE_NAME_2 = 'blackjek23/shreder'
+        DOCKER_IMAGE_NAME_3 = 'blackjek23/EMA'
     }
 
 
@@ -58,16 +59,22 @@ pipeline {
                 }
 
             // Build your first Docker image
+                sh "cp ./secret.py ./EMA"
+                sh "docker build -t ${DOCKER_IMAGE_NAME_3}:1.${BUILD_NUMBER} ./EMA"
+
+            // Build your first Docker image
                 sh "cp ./secret.py ./downloader"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
                 
             // Build your second Docker image
                 sh "mv ./secret.py ./shreder"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
+                
   
             // docker run 
-                sh "docker run --rm ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
                 sh "docker run --rm ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
+                sh "docker run --rm ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
+                sh "docker run --rm ${DOCKER_IMAGE_NAME_3}:1.${BUILD_NUMBER}"
             }
         }
 
