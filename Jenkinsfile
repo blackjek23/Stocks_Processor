@@ -69,12 +69,6 @@ pipeline {
             // Build your second Docker image
                 sh "mv ./secret.py ./shreder"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
-                
-  
-            // docker run 
-                sh "docker run --rm ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
-                sh "docker run --rm ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
-                sh "docker run --rm ${DOCKER_IMAGE_NAME_3}:1.${BUILD_NUMBER}"
             }
         }
 
@@ -87,6 +81,7 @@ pipeline {
                 echo 'Uploading images and cleaning up...'
                 sh "docker push ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER}"
                 sh "docker push ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER}"
+                sh "docker push ${DOCKER_IMAGE_NAME_3}:1.${BUILD_NUMBER}"
                 sh '''
                 docker rmi $(docker images -q) || true
                 '''
