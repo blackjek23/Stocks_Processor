@@ -37,6 +37,7 @@ pipeline {
             when {
                 branch 'master'
             }
+            steps {
             // Build your first Docker image
                 sh "cp ./secret.py ./downloader"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_1}:1.${BUILD_NUMBER} ./downloader"
@@ -45,7 +46,8 @@ pipeline {
                 sh "mv ./secret.py ./shreder"
                 sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
             }
-
+        }
+        
         // CLEANUP STARTS HERE !!!    
         stage('cleaning stage') {
             when {
