@@ -26,7 +26,7 @@ pipeline {
                    sh """
                         echo "Access_key= '${AWS_ACCESS_KEY_ID}'" > ${AWS_CRED_FILE}
                         echo "Secret_access_key= '${AWS_SECRET_ACCESS_KEY}'" >> ${AWS_CRED_FILE}
-                        echo $env.BRANCH_NAME
+                        echo '${DOCKER_REPO}$env.BRANCH_NAME'
                     """    
                 }
             }
