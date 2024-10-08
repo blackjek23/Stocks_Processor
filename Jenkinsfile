@@ -9,8 +9,7 @@ pipeline {
         AWS_REGION = 'us-west-1'
         TF_IN_AUTOMATION = 'true'
         AWS_CRED_FILE = 'secret.py'
-        DOCKER_IMAGE_NAME_1 = 'blackjek23/downloader'
-        DOCKER_IMAGE_NAME_2 = 'blackjek23/shreder'
+        DOCKER_REPO = 'blackjek23/'
     }
 
 
@@ -27,6 +26,7 @@ pipeline {
                    sh """
                         echo "Access_key= '${AWS_ACCESS_KEY_ID}'" > ${AWS_CRED_FILE}
                         echo "Secret_access_key= '${AWS_SECRET_ACCESS_KEY}'" >> ${AWS_CRED_FILE}
+                        echo $env.BRANCH_NAME
                     """    
                 }
             }
@@ -47,7 +47,7 @@ pipeline {
                 sh "docker build -t ${DOCKER_IMAGE_NAME_2}:1.${BUILD_NUMBER} ./shreder"
             }
         }
-        
+
         // CLEANUP STARTS HERE !!!    
         stage('cleaning stage') {
             when {
