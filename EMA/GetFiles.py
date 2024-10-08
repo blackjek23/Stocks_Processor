@@ -6,14 +6,16 @@ from EMAclac import detect_ema_cross
 
 region_name= 'us-west-1'
 
-def read_s3_csv_files(bucket_name):
+def read_s3_csv_files():
     session = boto3.Session(
         aws_access_key_id=Access_key,
         aws_secret_access_key=Secret_access_key,
         region_name=region_name
     )
     # Initialize a session using Amazon S3
-    s3 = boto3.client('s3')
+    s3 = session.client('s3')
+
+    bucket_name = 'blackjek-bucket-unique'
     
     try:
         # List the objects in the bucket
@@ -21,7 +23,7 @@ def read_s3_csv_files(bucket_name):
         
         if 'Contents' in response:
             # open the output file
-            with open('alerts.txt', 'w') as output_file:
+            with open('./output/alerts.txt', 'w') as output_file:
                 for obj in response['Contents']:
                     file_key = obj['Key']
                     
@@ -48,4 +50,4 @@ def read_s3_csv_files(bucket_name):
         print(f"Error fetching the bucket contents: {e}")
 
 if __name__ == "__main__":
-    read_s3_csv_files('blackjek-bucket-unique')
+    read_s3_csv_files()
