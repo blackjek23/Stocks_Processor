@@ -23,7 +23,7 @@ def read_s3_csv_files():
         
         if 'Contents' in response:
             # open the output file
-            with open('./output/alerts.txt', 'w') as output_file:
+            with open('./output/ema.txt', 'w') as output_file:
                 for obj in response['Contents']:
                     file_key = obj['Key']
                     
