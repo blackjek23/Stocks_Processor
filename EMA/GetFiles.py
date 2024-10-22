@@ -2,6 +2,7 @@ from secret import Access_key, Secret_access_key
 import boto3
 import pandas as pd
 from io import StringIO
+import json
 from EMAclac import detect_ema_cross
 
 region_name= 'us-west-1'
@@ -23,7 +24,8 @@ def read_s3_csv_files():
         
         if 'Contents' in response:
             # open the output file
-            with open('./output/ema.txt', 'w') as output_file:
+            with open('./output/ema.json', 'w') as output_file:
+                all_valid_rows = []
                 for obj in response['Contents']:
                     file_key = obj['Key']
                     
@@ -33,17 +35,23 @@ def read_s3_csv_files():
                         file_obj = s3.get_object(Bucket=bucket_name, Key=file_key)
                         file_content = file_obj['Body'].read().decode('utf-8')
                         
-                            # Read the CSV file into a pandas DataFrame
+                        # Read the CSV file into a pandas DataFrame
                         stock_data = pd.read_csv(StringIO(file_content), parse_dates=['Date'], index_col='Date')
                             
                         last_cross_row = detect_ema_cross(stock_data, output_file)
             
                         if last_cross_row is not None:
+                            ticker= file_key.replace('.csv', '')
                             # Write the ticker name and the last row to the alerts file
-                            output_file.write(f"Ticker: {file_key}\n")
-                            output_file.write(f"Date: {last_cross_row.name}\n")
-                            output_file.write(f"{last_cross_row.to_string()}\n")
-                            output_file.write("\n")  # Add a newline for separation between entries
+                            valid_row_dict = {
+                                "Ticker": ticker,                          # Include the ticker name (file name)
+                                "Date": str(last_cross_row.name),            # Convert the row index (Date) to string for JSON
+                                "Data": last_cross_row.to_dict()             # Convert the row data to a dictionary
+                            }
+                            # Append the valid row dictionary to the list
+                            all_valid_rows.append(valid_row_dict)
+                
+                json.dump(all_valid_rows, output_file, indent=4)
         else:
             print(f"No contents found in the bucket {bucket_name}.")
     except Exception as e:
